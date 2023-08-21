@@ -1,8 +1,14 @@
-import type { ILoginUser, IUser } from '@/types/types'
+import { type ILoginUser } from '@/types/types'
 import axios from 'axios'
+import IUser from '@/types/types'
+import { constants } from '../utils'
 
-class Api {
-  url = 'https://cards-nestjs.cyclic.cloud/api/'
+class UserApi {
+  url: string
+
+  constructor(url: string) {
+    this.url = url
+  }
 
   async signUp(user: IUser) {
     const newUser = await axios.post(this.url + 'user/signup', user)
@@ -14,4 +20,4 @@ class Api {
   }
 }
 
-export default new Api()
+export default new UserApi(constants.baseUrl)

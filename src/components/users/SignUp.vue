@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { reactive, computed, ref } from 'vue'
-import Api from '../../api/api'
+import { reactive, computed } from 'vue'
 import { AxiosError } from 'axios'
 import { IError } from '../../types/types'
+import userApi from '../../api/userApi'
 
 type form = { username: string; password: string; passwordConfirm: string }
 
@@ -30,7 +30,7 @@ const submit = async () => {
   form.error = ''
   form.isLoading = true
   try {
-    await Api.signUp({ username: form.username, password: form.password })
+    await userApi.signUp({ username: form.username, password: form.password })
   } catch (error) {
     let message = ((error as AxiosError).response?.data as IError).message
 

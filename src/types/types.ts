@@ -14,4 +14,12 @@ interface ILoginUser {
   access_token: string
 }
 
-export type { IError, IUser, ILoginUser }
+interface IDashboard {
+  id: number
+  title: string
+  created_at: string
+  updated_at: string
+  cards: []
+}
+
+export type { IError, IUser, ILoginUser, IDashboard }

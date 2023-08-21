@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { reactive, computed, ref } from 'vue'
+import { reactive, computed } from 'vue'
 import { AxiosError } from 'axios'
 import { useCookies } from 'vue3-cookies'
 
 import Api from '../../api/api'
 import { IError, ILoginUser } from '../../types/types'
 import { useRouter } from 'vue-router'
+import { userStore } from '../../stores/user'
+import userApi from '../../api/userApi'
 
 type form = { username: string; password: string }
 
@@ -23,6 +25,7 @@ const errors = computed(() => {
 
 const { cookies } = useCookies()
 const router = useRouter()
+const user = userStore()
 
 const formInputs: { name: string; value: string }[] = [
   { name: 'Enter username', value: 'username' },
@@ -32,14 +35,18 @@ const formInputs: { name: string; value: string }[] = [
 const submit = async () => {
   form.error = ''
   form.isLoading = true
+
   try {
-    const login: ILoginUser = await Api.logIn({
+    const login: ILoginUser = await userApi.logIn({
       username: form.username,
       password: form.password
     })
 
     cookies.set('userId', login.userId.toString())
     cookies.set('token', login.access_token)
+
+    user.setUserId(login.userId)
+    user.setUserLogin(true)
 
     router.push({ name: 'Dashboards' })
   } catch (error) {
@@ -64,7 +71,7 @@ const submit = async () => {
         <input v-model="form[item.value as keyof form]" placeholder="Type here..." />
       </div>
       <div class="form__footer">
-        <button type="submit" :class="['btn', errors && 'disabled']">LogIn</button>
+        <button type="submit" :class="['btn-submit', errors && 'disabled']">Login</button>
 
         <div v-if="form.isLoading" class="loading">Loading...</div>
         <Transition name="fade">
@@ -85,79 +92,13 @@ const submit = async () => {
   width: 100%;
   height: 100%;
 
-  .form {
-    display: flex;
-    justify-content: space-evenly;
-    flex-direction: column;
-
-    height: 50%;
-    width: 80%;
-    padding: 20px;
-
-    border: 0.5px solid rgba(183, 156, 156, 0.444);
-    border-radius: 10px;
-    background: #f6f6f6;
-
-    &__input {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-
-      input {
-        padding: 10px;
-        outline: none;
-
-        border-radius: 20px;
-        border: 1px solid #ebebeb;
-        background: #fff;
-
-        transition: 1s;
-      }
-
-      input:focus {
-        border: 1px solid darkorchid;
-      }
-    }
-
-    &__footer {
-      display: flex;
-
-      .loading {
-        margin: auto;
-        width: 80%;
-      }
-
-      .error {
-        margin: auto;
-        width: 80%;
-        color: red;
-
-        &::first-letter {
-          text-transform: capitalize;
-        }
-      }
-    }
-  }
-
-  .btn {
-    height: 40px;
-    width: 100px;
-
-    color: white;
-
-    border-radius: 15px;
-    background: #67cb65;
-    border: 1px solid transparent;
-    transition: 0.5s;
-
-    &:hover {
-      outline: 1px solid chocolate;
-    }
-  }
-
   .disabled {
     opacity: 0.5;
     pointer-events: none;
+  }
+
+  .btn-submit {
+    padding: 0 20px;
   }
 }
 </style>

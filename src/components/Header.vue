@@ -16,9 +16,9 @@ import UserAvatar from './icons/UserAvatar.vue'
   justify-content: space-between;
   align-items: center;
 
-  padding: 0px 40px;
+  padding: 10px 40px;
 
-  width: 90%;
+  box-shadow: 1px 2px 11px 0px rgba(148, 148, 148, 0.25);
 
   .input {
     width: 80%;
