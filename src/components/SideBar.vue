@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Logo from './icons/logo.vue'
-import { type PropType, onMounted, watchEffect, watch } from 'vue'
+import { type PropType, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const props = defineProps({
@@ -15,10 +15,6 @@ const router = useRouter()
 onMounted(async () => {
   await router.isReady()
   props.switchItem(route.name)
-})
-
-watch(props.menuItems, () => {
-  console.log(props.menuItems)
 })
 
 const isActive = (item: string) => {
