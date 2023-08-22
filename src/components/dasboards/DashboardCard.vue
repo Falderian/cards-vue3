@@ -2,14 +2,21 @@
 import { PropType } from 'vue'
 import { IDashboard } from '../../types/types'
 import { formatDate } from '../../utils'
+import { useRoute, useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const { dashboard } = defineProps({
   dashboard: { type: Object as PropType<IDashboard>, required: true }
 })
+
+const handleClick = (id: number) => {
+  router.push({ name: 'dashboard', params: { id } })
+}
 </script>
 
 <template>
-  <section class="dashboard">
+  <section class="dashboard base-border" @click="handleClick(dashboard.id)">
     <h4>{{ dashboard.title }}</h4>
     <div class="info">
       <div>Tasks count: {{ dashboard.cards.length }}</div>
@@ -19,7 +26,7 @@ const { dashboard } = defineProps({
   </section>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .dashboard {
   display: flex;
   flex-direction: column;
@@ -28,8 +35,6 @@ const { dashboard } = defineProps({
   padding: 15px 25px;
   width: fit-content;
 
-  border-radius: 15px;
-  background: #f6f6f6;
   font-size: 16px;
 
   cursor: pointer;

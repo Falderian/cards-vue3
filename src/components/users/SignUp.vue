@@ -83,8 +83,6 @@ const submit = async () => {
     padding: 20px;
 
     border: 0.5px solid rgba(183, 156, 156, 0.444);
-    border-radius: 10px;
-    background: #f6f6f6;
 
     &__input {
       display: flex;

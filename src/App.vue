@@ -14,7 +14,7 @@ const { cookies } = useCookies()
 const user = userStore()
 
 const menuItems = computed<string[]>(() => {
-  return user.isUserLogined ? ['Dashboards', 'LogOut'] : ['LogIn', 'SignIn']
+  return user.isUserLogined ? ['Dashboards', 'LogOut'] : ['SignIn', 'SignUp']
 })
 
 const activeItem = ref(menuItems.value[0])
@@ -26,7 +26,7 @@ const switchItem = (item: string) => {
 
     user.setUserLogin(false)
 
-    router.push({ name: 'LogIn' })
+    router.push({ name: 'SignIn' })
     return
   }
 

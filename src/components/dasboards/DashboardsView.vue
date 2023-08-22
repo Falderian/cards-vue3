@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted } from 'vue'
 
 import { userStore } from '../../stores/user'
-import DashboardsApi from '../../api/dashboardsApi'
-import DashboardsScreen from './DashboardsScreen.vue'
 import { dashboardsStore } from '../../stores/dashboards'
 
 const user = userStore()
@@ -20,8 +18,7 @@ onMounted(async () => {
 
 <template>
   <section class="wrapper">
-    <DashboardsScreen v-if="dashboards.dashboards.length" :dashboards="dashboards.dashboards" />
-    <div v-else>There is no dashboards.</div>
+    <router-view></router-view>
   </section>
 </template>
 

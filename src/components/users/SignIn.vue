@@ -2,8 +2,6 @@
 import { reactive, computed } from 'vue'
 import { AxiosError } from 'axios'
 import { useCookies } from 'vue3-cookies'
-
-import Api from '../../api/api'
 import { IError, ILoginUser } from '../../types/types'
 import { useRouter } from 'vue-router'
 import { userStore } from '../../stores/user'
@@ -51,6 +49,7 @@ const submit = async () => {
     router.push({ name: 'Dashboards' })
   } catch (error) {
     console.log(error)
+
     let message = ((error as AxiosError).response?.data as IError).message
 
     if (Array.isArray(message)) {

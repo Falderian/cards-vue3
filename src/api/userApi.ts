@@ -18,6 +18,10 @@ class UserApi {
     const login = (await (await axios.post(this.url + 'user/signin', user)).data) as ILoginUser
     return login
   }
+  async validateToken(payload: { token: string }) {
+    const isValid = await axios.post(this.url + 'token', payload)
+    return isValid
+  }
 }
 
 export default new UserApi(constants.baseUrl)

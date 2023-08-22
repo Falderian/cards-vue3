@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Logo from './icons/logo.vue'
-import { type PropType, onMounted } from 'vue'
+import { type PropType, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const props = defineProps({
@@ -12,10 +12,13 @@ const props = defineProps({
 const route = useRoute()
 const router = useRouter()
 
-onMounted(async () => {
-  await router.isReady()
-  props.switchItem(route.name)
-})
+watch(
+  () => route.name,
+  async () => {
+    await router.isReady()
+    props.switchItem(route.name)
+  }
+)
 
 const isActive = (item: string) => {
   return props.activeItem === item

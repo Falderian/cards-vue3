@@ -1,8 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import SignUp from '../components/users/SignUp.vue'
-import LogIn from '../components/users/LogIn.vue'
-import DashboardsView from '@/components/dasboards/DashboardsView.vue'
 import { userStore } from '@/stores/user'
+
+import SignUp from '@/components/users/SignUp.vue'
+import SignIn from '@/components/users/SignIn.vue'
+import NotFound from '@/components/NotFound.vue'
+import DashboardsView from '@/components/dasboards/DashboardsView.vue'
+import DashboardScreen from '@/components/dasboards/DashboardScreen.vue'
+import DashboardsScreen from '@/components/dasboards/DashboardsScreen.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -13,21 +17,39 @@ const router = createRouter({
       component: SignUp
     },
     {
-      path: '/login',
-      name: 'LogIn',
-      component: LogIn
+      path: '/signin',
+      name: 'SignIn',
+      component: SignIn
     },
     {
       path: '/dashboards',
       name: 'Dashboards',
       component: DashboardsView,
+      redirect: () => ({ name: 'list' }),
       beforeEnter: (to, from, next) => {
         const { isUserLogined } = userStore()
         if (isUserLogined) {
           return next()
         }
-        next('/login')
-      }
+        next('/signin')
+      },
+      children: [
+        {
+          path: 'list',
+          name: 'list',
+          component: DashboardsScreen
+        },
+        {
+          path: ':id',
+          name: 'dashboard',
+          component: DashboardScreen
+        }
+      ]
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'notFound',
+      component: NotFound
     }
   ]
 })
