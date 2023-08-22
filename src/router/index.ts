@@ -4,9 +4,9 @@ import { userStore } from '@/stores/user'
 import SignUp from '@/components/users/SignUp.vue'
 import SignIn from '@/components/users/SignIn.vue'
 import NotFound from '@/components/NotFound.vue'
-import DashboardsView from '@/components/dasboards/DashboardsView.vue'
-import DashboardScreen from '@/components/dasboards/DashboardScreen.vue'
-import DashboardsScreen from '@/components/dasboards/DashboardsScreen.vue'
+import DashboardsView from '@/components/dashboards/DashboardsView.vue'
+import DashboardScreen from '@/components/dashboards/DashboardScreen.vue'
+import DashboardsScreen from '@/components/dashboards/DashboardsScreen.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

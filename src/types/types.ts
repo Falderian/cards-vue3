@@ -19,7 +19,23 @@ interface IDashboard {
   title: string
   created_at: string
   updated_at: string
-  cards: []
+  tasksCount: number
+  cards: {
+    toDo: string
+    inProgress: string
+    review: string
+    completed: string
+  }
 }
 
-export type { IError, IUser, ILoginUser, IDashboard }
+interface ICard {
+  id: number
+  content: string
+  priority: string
+  status: string
+  title: string
+  created_at: string
+  updated_at: string
+}
+
+export type { IError, IUser, ILoginUser, IDashboard, ICard }
