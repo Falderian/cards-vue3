@@ -1,11 +1,17 @@
 <script setup lang="ts">
+import { userStore } from '../stores/user'
 import UserAvatar from './icons/UserAvatar.vue'
+
+const { user } = userStore()
 </script>
+
 <template>
   <div class="header">
-    <div contenteditable="true" placeholder="Searc..." class="input"></div>
-    <UserAvatar />
-    <span>UserName</span>
+    <div contenteditable="true" class="input"></div>
+    <div v-if="user.username" class="user">
+      <span>User: </span>
+      <span>{{ user.username }}</span>
+    </div>
   </div>
 </template>
 
@@ -33,6 +39,14 @@ import UserAvatar from './icons/UserAvatar.vue'
     &:focus {
       outline: 1px solid chocolate;
     }
+  }
+
+  .user {
+    display: flex;
+    gap: 5px;
+
+    align-items: center;
+    justify-content: center;
   }
 }
 </style>

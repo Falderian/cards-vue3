@@ -1,12 +1,9 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import type { IDashboard } from '@/types/types'
+import type { IDashboard, createDashboardDro } from '@/types/types'
 import dashboardsApi from '@/api/dashboardsApi'
 
-type createDashboardDro = {
-  title: string
-  userId: number
-}
+
 
 export const dashboardsStore = defineStore('dashboardsStore', () => {
   const dashboards = ref<IDashboard[]>([])
@@ -15,9 +12,9 @@ export const dashboardsStore = defineStore('dashboardsStore', () => {
     dashboards.value = await dashboardsApi.getUsersDashboards(userId)
   }
 
-  const createDashboard = async (payload: createDashboardDro) => {
-    const newDashboard = await dashboardsApi.createDashboard(payload)
-    getDashboards(payload.userId)
+  const createDashboard = async (dashboard: createDashboardDro) => {
+    const newDashboard = await dashboardsApi.createDashboard(dashboard)
+    getDashboards(dashboard.userId)
     return newDashboard
   }
 

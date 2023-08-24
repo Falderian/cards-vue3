@@ -1,7 +1,16 @@
-export const constants = {
-  baseUrl: 'https://cards-nestjs.cyclic.cloud/api/'
+const constants = {
+  baseUrl: 'http://localhost:5000/api/'
 }
 
-export const formatDate = (date: string) => {
+const formatDate = (date: string) => {
   return new Date(date).toLocaleDateString()
 }
+
+const taskStatuses = {
+  toDo: 'To do',
+  inProgress: 'In progress',
+  review: 'Review',
+  completed: 'Completed'
+}
+
+export { formatDate, taskStatuses, constants }

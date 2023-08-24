@@ -15,7 +15,7 @@ const emit = defineEmits<{
 <template>
   <VueFinalModal
     class="confirm-modal"
-    content-class="confirm-modal-content"
+    content-class="confirm-modal-content base-border"
     overlay-transition="vfm-fade"
     content-transition="vfm-fade"
   >
@@ -46,8 +46,6 @@ const emit = defineEmits<{
   padding: 20px;
 
   border: 0.5px solid rgba(183, 156, 156, 0.444);
-  border-radius: 10px;
-  background: #f6f6f6;
 }
 .confirm-modal-content > * + * {
   margin: 0.5rem 0;

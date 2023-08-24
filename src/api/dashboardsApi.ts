@@ -1,6 +1,8 @@
 import axios from 'axios'
 import { constants } from '../utils'
 import { useCookies } from 'vue3-cookies'
+import { createDashboardDro, IDashboard } from '../types/types'
+
 const { cookies } = useCookies()
 
 class DashboardsApi {
@@ -23,9 +25,19 @@ class DashboardsApi {
     return dashboards
   }
 
-  async createDashboard(payload: { title: string; userId: number }) {
+  async createDashboard(payload: createDashboardDro) {
     const newDashboard = await axios.post(this.url, payload, this.config)
     return newDashboard
+  }
+
+  async getDashboard(dashboardId: number): Promise<IDashboard> {
+    const cards = (await axios.get(this.url + dashboardId + '/cards', this.config)).data
+    return cards
+  }
+
+  async updateDashboard(dashboard: createDashboardDro) {
+    const updatedDashboard = await axios.put(this.url, dashboard, this.config)
+    return updatedDashboard
   }
 }
 

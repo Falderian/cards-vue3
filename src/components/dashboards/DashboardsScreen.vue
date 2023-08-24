@@ -1,19 +1,14 @@
 <script setup lang="ts">
-import { PropType, ref } from 'vue'
+import { ref } from 'vue'
 import { useModal, useModalSlot } from 'vue-final-modal'
 import { AxiosError } from 'axios'
 
-import Dashboard from './Dashboard.vue'
-import { IDashboard } from '../../types/types'
+import DashboardCard from './DashboardCard.vue'
 import ModalConfirm from '../modal/ModalConfirm.vue'
 import BaseForm from '../BaseForm.vue'
 import { IError } from '../../types/types'
-import { userStore } from '@/stores/user'
+import { userStore } from '../../stores/user'
 import { dashboardsStore } from '../../stores/dashboards'
-
-const props = defineProps({
-  dashboards: { type: Array as PropType<IDashboard[]>, required: true }
-})
 
 const user = userStore()
 const dashboards = dashboardsStore()
@@ -52,7 +47,11 @@ const { open, close } = useModal({
   <button @click="() => open()" class="btn-create">Create dashboard</button>
   <div>Dashboards:</div>
   <div class="dashboards">
-    <Dashboard v-for="dashboard in dashboards.dashboards" :dashboard="dashboard" />
+    <DashboardCard
+      v-for="dashboard in dashboards.dashboards"
+      :dashboard="dashboard"
+      :key="dashboard.id"
+    />
   </div>
 </template>
 
@@ -63,6 +62,8 @@ const { open, close } = useModal({
 }
 .dashboards {
   display: flex;
+  flex-wrap: wrap;
+
   padding: 20px 0px;
   gap: 20px;
 }

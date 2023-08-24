@@ -19,7 +19,52 @@ interface IDashboard {
   title: string
   created_at: string
   updated_at: string
-  cards: []
+  tasksCount: number
+  cards: {
+    toDo: string
+    inProgress: string
+    review: string
+    completed: string
+  }
 }
 
-export type { IError, IUser, ILoginUser, IDashboard }
+interface ICard {
+  id: number
+  content: string
+  priority: string
+  status: string
+  title: string
+  created_at: string
+  updated_at: string
+}
+
+type createDashboardDro = {
+  title: string
+  userId: number
+  description?: string
+}
+
+type createCardDto = {
+  title: string
+  content: string
+  status: string
+  userId: number
+  dashboardId: number
+}
+
+type ILoginedUser = {
+  username: string
+  id: number
+  isLogined: boolean
+}
+
+export type {
+  IError,
+  IUser,
+  ILoginUser,
+  ILoginedUser,
+  IDashboard,
+  ICard,
+  createDashboardDro,
+  createCardDto
+}

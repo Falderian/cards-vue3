@@ -1,7 +1,6 @@
-import { type ILoginUser } from '@/types/types'
 import axios from 'axios'
-import IUser from '@/types/types'
 import { constants } from '../utils'
+import { IUser, ILoginUser } from '../types/types'
 
 class UserApi {
   url: string
@@ -17,6 +16,10 @@ class UserApi {
   async logIn(user: IUser) {
     const login = (await (await axios.post(this.url + 'user/signin', user)).data) as ILoginUser
     return login
+  }
+  async validateToken(payload: { token: string }) {
+    const isValid = await axios.post(this.url + 'token', payload)
+    return isValid
   }
 }
 
