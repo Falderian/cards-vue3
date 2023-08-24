@@ -1,12 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { userStore } from '@/stores/user'
 
-import SignUp from '@/components/users/SignUp.vue'
-import SignIn from '@/components/users/SignIn.vue'
-import NotFound from '@/components/NotFound.vue'
-import DashboardsView from '@/components/dashboards/DashboardsView.vue'
-import DashboardScreen from '@/components/dashboards/DashboardScreen.vue'
-import DashboardsScreen from '@/components/dashboards/DashboardsScreen.vue'
+import SignUp from '../components/users/SignUp.vue'
+import SignIn from '../components/users/SignIn.vue'
+import DashboardsView from '../components/dashboards/DashboardsView.vue'
+import DashboardsScreen from '../components/dashboards/DashboardsScreen.vue'
+import DashboardScreen from '../components/dashboards/DashboardScreen.vue'
+import NotFound from '../components/NotFound.vue'
+import { isUserLogined } from '../helpers/userHelpers'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,13 +26,6 @@ const router = createRouter({
       name: 'Dashboards',
       component: DashboardsView,
       redirect: () => ({ name: 'list' }),
-      beforeEnter: (to, from, next) => {
-        const { isUserLogined } = userStore()
-        if (isUserLogined) {
-          return next()
-        }
-        next('/signin')
-      },
       children: [
         {
           path: 'list',
@@ -52,6 +45,13 @@ const router = createRouter({
       component: NotFound
     }
   ]
+})
+
+router.beforeEach(async (to, from, next) => {
+  const { name } = to
+  const isLogined = await isUserLogined()
+  if (name !== 'SignIn' && !isLogined) next({ name: 'SignIn' })
+  else next()
 })
 
 export default router

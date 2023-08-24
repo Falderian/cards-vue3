@@ -4,7 +4,7 @@ import { onMounted } from 'vue'
 import { userStore } from '../../stores/user'
 import { dashboardsStore } from '../../stores/dashboards'
 
-const user = userStore()
+const { user } = userStore()
 const dashboards = dashboardsStore()
 
 onMounted(async () => {

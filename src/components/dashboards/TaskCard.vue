@@ -1,18 +1,41 @@
 <script lang="ts" setup>
+import { useModal, useModalSlot } from 'vue-final-modal'
 import { PropType } from 'vue'
 import { ICard } from '../../types/types'
 import { formatDate } from '../../utils'
+import RemoveIcon from '../icons/RemoveIcon.vue'
+import ModalConfirm from '../modal/ModalConfirm.vue'
+import cardsApi from '../../api/cardsApi'
 
 const { card } = defineProps({
   card: { type: Object as PropType<ICard>, required: true }
+})
+
+const { open, close } = useModal({
+  component: ModalConfirm,
+  attrs: {
+    title: 'Delete card from ' + card.status + ' column.',
+    async onConfirm() {
+      try {
+        await cardsApi.deleteCard(card.id)
+        close()
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  },
+  slots: {
+    default: `Are you sure you want to delete card with title = ${card.title} ?`
+  }
 })
 </script>
 
 <template>
   <section class="card">
     <div class="card__header">
-      <h5>{{ card.title }}</h5>
+      <h5 class="w-6">{{ card.title }}</h5>
       <div :class="['card__priority', card.priority]">{{ card.priority }}</div>
+      <RemoveIcon @click="open" />
     </div>
     <div class="card__info">
       <span class="stat">Content: </span>
@@ -32,12 +55,22 @@ const { card } = defineProps({
   background: #e0e4ea;
   font-size: 14px;
 
+  transition: 0.5s;
+  user-select: none;
+
+  &:hover {
+    background-color: rgba(161, 101, 101, 0.42);
+  }
+
   &__header {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 0fr 20px;
+    grid-template-rows: 1fr;
     gap: 5px;
   }
+
   &__priority {
-    padding: 2px 5px;
+    padding: 1px 5px;
     border-radius: 10px;
     color: white;
     text-transform: capitalize;

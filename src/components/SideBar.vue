@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Logo from './icons/logo.vue'
-import { type PropType, onMounted, watch } from 'vue'
+import { type PropType, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const props = defineProps({
@@ -31,8 +31,9 @@ const isActive = (item: string) => {
     <ul class="menu">
       <li
         v-for="item in menuItems"
-        :class="['item', isActive(item) && 'active']"
+        :class="['item f-16 w-6', isActive(item) && 'active']"
         @click="switchItem(item)"
+        :key="item"
       >
         {{ item }}
       </li>
@@ -40,7 +41,7 @@ const isActive = (item: string) => {
   </div>
 </template>
 
-<style langs="scss" scoped>
+<style lang="scss" scoped>
 .sidebar {
   display: flex;
   flex-direction: column;
@@ -73,6 +74,7 @@ const isActive = (item: string) => {
       &:hover {
         text-decoration: dotted;
         color: orangered;
+        scale: 1.3;
       }
     }
   }

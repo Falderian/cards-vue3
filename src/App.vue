@@ -4,27 +4,27 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { ModalsContainer } from 'vue-final-modal'
 
-import SideBar from '@/components/SideBar.vue'
-import MainScreen from '@/components/MainScreen.vue'
-import Header from '@/components/Header.vue'
+import SideBar from './components/SideBar.vue'
+import MainScreen from './components/MainScreen.vue'
+import Header from './components/Header.vue'
 import { userStore } from './stores/user'
 
 const router = useRouter()
 const { cookies } = useCookies()
-const user = userStore()
+const { user, clearUser } = userStore()
 
 const menuItems = computed<string[]>(() => {
-  return user.isUserLogined ? ['Dashboards', 'LogOut'] : ['SignIn', 'SignUp']
+  return user.isLogined ? ['Dashboards', 'SignOut'] : ['SignIn', 'SignUp']
 })
 
 const activeItem = ref(menuItems.value[0])
 
 const switchItem = (item: string) => {
-  if (item === 'LogOut') {
+  if (item === 'SignOut') {
     cookies.remove('token')
     cookies.remove('userId')
 
-    user.setUserLogin(false)
+    clearUser()
 
     router.push({ name: 'SignIn' })
     return
@@ -52,7 +52,9 @@ const switchItem = (item: string) => {
   display: flex;
 
   width: 100%;
-  height: 98vh;
+  height: 100%;
+
+  overflow: hidden;
 
   &__column {
     display: flex;

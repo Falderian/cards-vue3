@@ -4,7 +4,7 @@ import { AxiosError } from 'axios'
 import { IError } from '../../types/types'
 import userApi from '../../api/userApi'
 
-type form = { username: string; password: string; passwordConfirm: string }
+type IForm = { username: string; password: string; passwordConfirm: string }
 
 const form = reactive({
   username: '',
@@ -47,9 +47,9 @@ const submit = async () => {
 <template>
   <div class="wrapper__form">
     <form class="form" @submit.prevent="submit">
-      <div v-for="item in formInputs" class="form__input">
+      <div v-for="item in formInputs" class="form__input" :key="item.name">
         <label>{{ item.name }}</label>
-        <input v-model="form[item.value as keyof form]" placeholder="Type here..." />
+        <input v-model="form[item.value as keyof IForm]" placeholder="Type here..." />
       </div>
       <div class="form__footer">
         <button type="submit" :class="['btn', errors && 'disabled']">Submit</button>

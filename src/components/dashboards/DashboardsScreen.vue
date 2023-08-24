@@ -7,8 +7,8 @@ import DashboardCard from './DashboardCard.vue'
 import ModalConfirm from '../modal/ModalConfirm.vue'
 import BaseForm from '../BaseForm.vue'
 import { IError } from '../../types/types'
-import { userStore } from '@/stores/user'
-import { dashboardsStore } from '@/stores/dashboards'
+import { userStore } from '../../stores/user'
+import { dashboardsStore } from '../../stores/dashboards'
 
 const user = userStore()
 const dashboards = dashboardsStore()
@@ -47,7 +47,11 @@ const { open, close } = useModal({
   <button @click="() => open()" class="btn-create">Create dashboard</button>
   <div>Dashboards:</div>
   <div class="dashboards">
-    <DashboardCard v-for="dashboard in dashboards.dashboards" :dashboard="dashboard" />
+    <DashboardCard
+      v-for="dashboard in dashboards.dashboards"
+      :dashboard="dashboard"
+      :key="dashboard.id"
+    />
   </div>
 </template>
 

@@ -1,23 +1,70 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
-import { onMounted, ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import dashboardsApi from '@/api/dashboardsApi'
 import { formatDate, taskStatuses } from '../../utils'
 import { IDashboard } from '@/types/types'
 import TasksColumn from './TasksColumn.vue'
+import EditIcon from '../icons/EditIcon.vue'
+import { useModal, useModalSlot } from 'vue-final-modal'
+import ModalConfirm from '../modal/ModalConfirm.vue'
+import BaseForm from '../BaseForm.vue'
 
 const route = useRoute()
-const dashboardId = ref(0)
-const dashboard: IDashboard = ref<IDashboard>(null)
-onMounted(async () => {
-  dashboardId.value = +route.params.id
+const isLoading = ref(true)
+let dashboard: IDashboard = reactive<IDashboard>({})
 
-  dashboard.value = await dashboardsApi.getDashboard(dashboardId.value)
+const formInputs = [{ label: 'Enter description of dashboard', ref: ref('') }]
+
+onMounted(() => {
+  updateDashboard()
+})
+
+const updateDashboard = async () => {
+  dashboard = await dashboardsApi.getDashboard(+route.params.id)
+  isLoading.value = false
+}
+
+const setLoading = (state: boolean) => {
+  isLoading.value = state
+}
+
+const { open, close } = useModal({
+  component: ModalConfirm,
+  attrs: {
+    title: 'Update dashboards description',
+    async onConfirm() {
+      try {
+        isLoading.value = true
+        const dashboardToUpdate = {
+          description: formInputs[0].ref.value,
+          id: dashboard.id,
+          title: dashboard.title
+        }
+        await dashboardsApi.updateDashboard(dashboardToUpdate)
+        dashboard.title = dashboardToUpdate.title
+        dashboard.description = dashboardToUpdate.description
+        close()
+      } catch (error) {
+        console.log(error)
+      } finally {
+        isLoading.value = false
+      }
+    }
+  },
+  slots: {
+    default: useModalSlot({
+      component: BaseForm,
+      attrs: {
+        form: formInputs
+      }
+    })
+  }
 })
 </script>
 
 <template>
-  <section v-if="dashboard">
+  <section v-if="!isLoading">
     <h2 class="f-20">{{ dashboard.title }}</h2>
     <div class="header">
       <div class="stats base-border">
@@ -26,13 +73,15 @@ onMounted(async () => {
         <span>Date updated:</span>
         <span class="stats__item">{{ formatDate(dashboard.created_at) }}</span>
       </div>
-      <div class="description base-border">{{ dashboard.description }}</div>
+      <div class="description base-border">
+        <span>{{ dashboard.description }}</span>
+        <span @click="() => open()"><EditIcon /></span>
+      </div>
       <div class="tasks base-border">
         <div class="status">
           <span>All tasks:</span>
           <span>{{ dashboard.tasksCount }}</span>
         </div>
-
         <div v-for="(cards, status) in dashboard.cards" :key="status" class="status">
           <span>{{ taskStatuses[status] }}</span>
           <span>{{ cards.length }}</span>
@@ -42,9 +91,12 @@ onMounted(async () => {
     <div class="table">
       <TasksColumn
         v-for="(cards, status) in dashboard.cards"
+        :dashboardId="dashboard.id"
         :cards="cards"
         :status="status.toString()"
         :key="status"
+        :set-loading="setLoading"
+        :update-dashboard="updateDashboard"
       />
     </div>
   </section>
@@ -90,7 +142,14 @@ onMounted(async () => {
   }
 
   .description {
+    display: flex;
+    justify-content: space-between;
+
     padding: 10px;
+
+    span:nth-child(2) {
+      height: fit-content;
+    }
   }
 }
 

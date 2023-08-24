@@ -38,4 +38,33 @@ interface ICard {
   updated_at: string
 }
 
-export type { IError, IUser, ILoginUser, IDashboard, ICard }
+type createDashboardDro = {
+  title: string
+  userId: number
+  description?: string
+}
+
+type createCardDto = {
+  title: string
+  content: string
+  status: string
+  userId: number
+  dashboardId: number
+}
+
+type ILoginedUser = {
+  username: string
+  id: number
+  isLogined: boolean
+}
+
+export type {
+  IError,
+  IUser,
+  ILoginUser,
+  ILoginedUser,
+  IDashboard,
+  ICard,
+  createDashboardDro,
+  createCardDto
+}

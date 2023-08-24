@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');
+@import 'vue-select/dist/vue-select.css';
 
 body,
 h1,
@@ -13,6 +14,11 @@ h5 {
   font-style: normal;
   font-family: 'Rubik', sans-serif;
   font-size: 14px;
+  font-weight: 400;
+}
+
+#app {
+  height: 100vh;
 }
 
 .form {
@@ -108,4 +114,17 @@ h5 {
 
 .f-20 {
   font-size: 20px;
+}
+
+.w-6 {
+  font-weight: 600;
+}
+
+.icon {
+  cursor: pointer;
+  transition: all 0.5s;
+
+  &:hover {
+    scale: 1.2;
+  }
 }

@@ -7,7 +7,11 @@ import { useRouter } from 'vue-router'
 import { userStore } from '../../stores/user'
 import userApi from '../../api/userApi'
 
-type form = { username: string; password: string }
+type IForm = { username: string; password: string }
+
+const { cookies } = useCookies()
+const router = useRouter()
+const user = userStore()
 
 const form = reactive({
   username: '',
@@ -20,10 +24,6 @@ const errors = computed(() => {
   const isAnyFieldEmpty = Object.values(form).some((field) => field)
   return !isAnyFieldEmpty
 })
-
-const { cookies } = useCookies()
-const router = useRouter()
-const user = userStore()
 
 const formInputs: { name: string; value: string }[] = [
   { name: 'Enter username', value: 'username' },
@@ -43,8 +43,7 @@ const submit = async () => {
     cookies.set('userId', login.userId.toString())
     cookies.set('token', login.access_token)
 
-    user.setUserId(login.userId)
-    user.setUserLogin(true)
+    user.setUser({ username: form.username, id: login.userId, isLogined: true })
 
     router.push({ name: 'Dashboards' })
   } catch (error) {
@@ -65,9 +64,9 @@ const submit = async () => {
 <template>
   <div class="wrapper__form">
     <form class="form" @submit.prevent="submit">
-      <div v-for="item in formInputs" class="form__input">
+      <div v-for="item in formInputs" class="form__input" :key="item.name">
         <label>{{ item.name }}</label>
-        <input v-model="form[item.value as keyof form]" placeholder="Type here..." />
+        <input v-model="form[item.value as keyof IForm]" placeholder="Type here..." />
       </div>
       <div class="form__footer">
         <button type="submit" :class="['btn-submit', errors && 'disabled']">Login</button>

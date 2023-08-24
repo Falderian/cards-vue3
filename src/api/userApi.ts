@@ -1,7 +1,6 @@
-import { type ILoginUser } from '@/types/types'
 import axios from 'axios'
-import IUser from '@/types/types'
 import { constants } from '../utils'
+import { IUser, ILoginUser } from '../types/types'
 
 class UserApi {
   url: string

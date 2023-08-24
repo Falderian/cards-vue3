@@ -17,9 +17,8 @@ const handleClick = (id: number) => {
 
 <template>
   <section class="dashboard base-border" @click="handleClick(dashboard.id)">
-    <h4>{{ dashboard.title }}</h4>
+    <h4 class="w-6 f-16">{{ dashboard.title }}</h4>
     <div class="info">
-      <div>Tasks count: {{ dashboard.tasksCount }}</div>
       <div>Created: {{ formatDate(dashboard.created_at) }}</div>
       <div>Updated: {{ formatDate(dashboard.updated_at) }}</div>
     </div>
@@ -39,6 +38,13 @@ const handleClick = (id: number) => {
 
   cursor: pointer;
   user-select: none;
+  border: 1px dotted transparent;
+
+  transition: all 0.5s;
+
+  &:hover {
+    box-shadow: 0px 0px 10px 1px rgba(34, 60, 80, 0.3);
+  }
 
   .info {
     display: flex;
