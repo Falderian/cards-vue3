@@ -33,7 +33,6 @@ const handleSelect = (e: Event) => {
       </select>
     </div>
   </form>
-
   <button v-if="button" @click="button.onClick" class="btn-submit btn-rmv">
     {{ button.text }}
   </button>

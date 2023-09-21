@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { constants } from '../utils'
 import { useCookies } from 'vue3-cookies'
-import { createDashboardDro, IDashboard } from '../types/types'
+import type { createDashboardDro, IDashboard } from '../types/types'
 
 const { cookies } = useCookies()
 

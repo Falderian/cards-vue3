@@ -8,6 +8,7 @@ import SideBar from './components/SideBar.vue'
 import MainScreen from './components/MainScreen.vue'
 import Header from './components/BaseHeader.vue'
 import { userStore } from './stores/user'
+import { notification } from './utils'
 
 const router = useRouter()
 const { cookies } = useCookies()
@@ -27,6 +28,7 @@ const switchItem = (item: string) => {
     clearUser()
 
     router.push({ name: 'SignIn' })
+    notification({ type: 'warn', text: 'Your have been sign out', title: 'Signed out' })
   } else {
     router.push({ name: item })
     activeItem.value = item
@@ -43,6 +45,7 @@ const switchItem = (item: string) => {
       <MainScreen />
     </div>
   </div>
+  <notifications />
 </template>
 
 <style scoped lang="scss">

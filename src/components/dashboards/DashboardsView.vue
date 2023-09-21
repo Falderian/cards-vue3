@@ -3,6 +3,7 @@ import { onMounted } from 'vue'
 
 import { userStore } from '../../stores/user'
 import { dashboardsStore } from '../../stores/dashboards'
+import { errorNotification } from '../../utils'
 
 const { user } = userStore()
 const dashboards = dashboardsStore()
@@ -11,7 +12,7 @@ onMounted(async () => {
   try {
     dashboards.getDashboards(user.id)
   } catch (error) {
-    console.log(error)
+    errorNotification(error as Error)
   }
 })
 </script>
@@ -32,14 +33,5 @@ onMounted(async () => {
   padding: 15px;
   width: 100%;
   height: 100%;
-}
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
 }
 </style>

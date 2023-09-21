@@ -6,6 +6,7 @@ import { IError, ILoginUser } from '../../types/types'
 import { useRouter } from 'vue-router'
 import { userStore } from '../../stores/user'
 import userApi from '../../api/userApi'
+import { errorNotification, notification } from '../../utils'
 
 type IForm = { username: string; password: string }
 
@@ -39,17 +40,16 @@ const submit = async () => {
       username: form.username,
       password: form.password
     })
+    user.setUser({ username: form.username, id: login.userId, isLogined: true })
 
     cookies.set('userId', login.userId.toString())
     cookies.set('token', login.access_token)
 
-    user.setUser({ username: form.username, id: login.userId, isLogined: true })
-
-    router.push({ name: 'Dashboards' })
+    notification({ type: 'success', title: 'Signed in', text: 'You have been logined' })
   } catch (error) {
-    console.log(error)
-
     let message = ((error as AxiosError).response?.data as IError).message
+
+    errorNotification(error as Error)
 
     if (Array.isArray(message)) {
       message = message.join(', ')
@@ -57,6 +57,7 @@ const submit = async () => {
     form.error = message
   } finally {
     form.isLoading = false
+    router.push({ name: 'Dashboards' })
   }
 }
 </script>

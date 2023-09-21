@@ -3,14 +3,14 @@ import { useModal, useModalSlot } from 'vue-final-modal'
 import { PropType, ref } from 'vue'
 
 import { ICard } from '../../types/types'
-import { formatDate } from '../../utils'
+import { errorNotification, formatDate } from '../../utils'
 import ModalConfirm from '../modal/ModalConfirm.vue'
 import cardsApi from '../../api/cardsApi'
 import BaseForm from '../BaseForm.vue'
+import { isAxiosError } from 'axios'
 
-const { card, cards, updateDashboard } = defineProps({
+const { card, updateDashboard } = defineProps({
   card: { type: Object as PropType<ICard>, required: true },
-  cards: { type: Array as PropType<ICard[]>, required: true },
   updateDashboard: { type: Function, required: true }
 })
 
@@ -27,7 +27,7 @@ const deleteCard = async (e: Event) => {
     close()
     return false
   } catch (error) {
-    console.error(error)
+    errorNotification(error as Error)
   }
 }
 
@@ -46,7 +46,7 @@ var { open, close } = useModal({
         close()
         await updateDashboard()
       } catch (error) {
-        console.log(error)
+        errorNotification(error as Error)
       }
     }
   },

@@ -5,7 +5,7 @@ import { useModal, useModalSlot } from 'vue-final-modal'
 import AddIcon from '../icons/AddIcon.vue'
 import TaskCard from './TaskCard.vue'
 import { ICard, ITaskStatuses } from '../../types/types'
-import { taskStatuses } from '../../utils'
+import { errorNotification, taskStatuses } from '../../utils'
 import CardsApi from '../../api/cardsApi'
 import ModalConfirm from '../modal/ModalConfirm.vue'
 import BaseForm from '../BaseForm.vue'
@@ -55,7 +55,7 @@ const { open, close } = useModal({
         close()
         await updateDashboard()
       } catch (error) {
-        console.error(error)
+        errorNotification(error as Error)
       } finally {
         setLoading(false)
       }

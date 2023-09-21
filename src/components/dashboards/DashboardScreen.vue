@@ -4,7 +4,7 @@ import { onMounted, ref } from 'vue'
 import { useModal, useModalSlot } from 'vue-final-modal'
 
 import dashboardsApi from '../../api/dashboardsApi'
-import { formatDate, taskStatuses } from '../../utils'
+import { errorNotification, formatDate, taskStatuses } from '../../utils'
 import { IDashboard } from '../../types/types'
 import TasksColumn from './TasksColumn.vue'
 import EditIcon from '../icons/EditIcon.vue'
@@ -49,7 +49,7 @@ const { open, close } = useModal({
         dashboard.description = dashboardToUpdate.description
         close()
       } catch (error) {
-        console.log(error)
+        errorNotification(error as Error)
       } finally {
         isLoading.value = false
       }
@@ -68,42 +68,40 @@ const { open, close } = useModal({
 
 <template>
   <section v-if="!isLoading" class="dashboard">
-    <TransitionGroup name="fade">
-      <h2 class="f-20">{{ dashboard.title }}</h2>
-      <div class="header">
-        <div class="stats base-border">
-          <span>Date added:</span>
-          <span>{{ formatDate(dashboard.created_at) }}</span>
-          <span>Date updated:</span>
-          <span class="stats__item">{{ formatDate(dashboard.created_at) }}</span>
+    <h2 class="f-20">{{ dashboard.title }}</h2>
+    <div class="header">
+      <div class="stats base-border">
+        <span>Date added:</span>
+        <span>{{ formatDate(dashboard.created_at) }}</span>
+        <span>Date updated:</span>
+        <span class="stats__item">{{ formatDate(dashboard.created_at) }}</span>
+      </div>
+      <div class="description base-border">
+        <span>{{ dashboard.description }}</span>
+        <span @click="() => open()"><EditIcon /></span>
+      </div>
+      <div class="tasks base-border">
+        <div class="status">
+          <span>All tasks:</span>
+          <span>{{ dashboard.tasksCount }}</span>
         </div>
-        <div class="description base-border">
-          <span>{{ dashboard.description }}</span>
-          <span @click="() => open()"><EditIcon /></span>
-        </div>
-        <div class="tasks base-border">
-          <div class="status">
-            <span>All tasks:</span>
-            <span>{{ dashboard.tasksCount }}</span>
-          </div>
-          <div v-for="(cards, status) in dashboard.cards" :key="status" class="status">
-            <span>{{ taskStatuses[status] }}</span>
-            <span>{{ cards.length }}</span>
-          </div>
+        <div v-for="(cards, status) in dashboard.cards" :key="status" class="status">
+          <span>{{ taskStatuses[status] }}</span>
+          <span>{{ cards.length }}</span>
         </div>
       </div>
-      <div class="table">
-        <TasksColumn
-          v-for="(cards, status) in dashboard.cards"
-          :dashboardId="dashboard.id"
-          :cards="cards"
-          :status="status.toString()"
-          :key="status"
-          :set-loading="setLoading"
-          :update-dashboard="updateDashboard"
-        />
-      </div>
-    </TransitionGroup>
+    </div>
+    <div class="table">
+      <TasksColumn
+        v-for="(cards, status) in dashboard.cards"
+        :dashboardId="dashboard.id"
+        :cards="cards"
+        :status="status.toString()"
+        :key="status"
+        :set-loading="setLoading"
+        :update-dashboard="updateDashboard"
+      />
+    </div>
   </section>
   <LoadingIcon v-else />
 </template>

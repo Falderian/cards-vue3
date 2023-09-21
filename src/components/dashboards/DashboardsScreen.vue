@@ -9,6 +9,7 @@ import BaseForm from '../BaseForm.vue'
 import { IError } from '../../types/types'
 import { userStore } from '../../stores/user'
 import { dashboardsStore } from '../../stores/dashboards'
+import { errorNotification } from '../../utils'
 
 const user = userStore()
 const dashboards = dashboardsStore()
@@ -25,10 +26,11 @@ const { open, close } = useModal({
     async onConfirm() {
       try {
         formError.value = ''
-        await dashboards.createDashboard({ title: formInputs[0].ref.value, userId: user.id })
+        await dashboards.createDashboard({ title: formInputs[0].ref.value, userId: user.$id })
         close()
       } catch (error) {
         formError.value = ((error as AxiosError).response?.data as IError).message as string
+        errorNotification(error as Error)
       }
     }
   },
@@ -47,13 +49,11 @@ const { open, close } = useModal({
   <button @click="() => open()" class="btn-create">Create dashboard</button>
   <div>Dashboards:</div>
   <div class="dashboards">
-    <TransitionGroup name="fade">
-      <DashboardCard
-        v-for="dashboard in dashboards.dashboards"
-        :dashboard="dashboard"
-        :key="dashboard.id"
-      />
-    </TransitionGroup>
+    <DashboardCard
+      v-for="dashboard in dashboards.dashboards"
+      :dashboard="dashboard"
+      :key="dashboard.id"
+    />
   </div>
 </template>
 

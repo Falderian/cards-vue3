@@ -69,6 +69,12 @@ interface ITaskStatuses {
   [key: string]: string | undefined
 }
 
+type TNotification = {
+  type: string
+  text: string
+  title: string
+}
+
 export type {
   IError,
   IUser,
@@ -79,5 +85,6 @@ export type {
   createDashboardDro,
   createCardDto,
   updateCardDto,
-  ITaskStatuses
+  ITaskStatuses,
+  TNotification
 }
