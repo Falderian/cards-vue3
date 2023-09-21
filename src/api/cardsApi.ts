@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { constants } from '../utils'
 import { useCookies } from 'vue3-cookies'
-import { createCardDto } from '../types/types'
+import type { createCardDto, updateCardDto } from '../types/types'
 
 const { cookies } = useCookies()
 
@@ -25,8 +25,13 @@ class CardsApi {
     return newCard
   }
 
+  async updateCard(payload: updateCardDto) {
+    const req = await axios.patch(this.url, payload, this.config)
+    return req
+  }
+
   async deleteCard(id: number) {
-    const req = await axios.delete(this.url + 'id', this.config)
+    const req = await axios.delete(this.url + id, this.config)
     return req
   }
 }

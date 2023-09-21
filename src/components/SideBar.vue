@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Logo from './icons/logo.vue'
+import Logo from './icons/BaseLogo.vue'
 import { type PropType, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -46,8 +46,8 @@ const isActive = (item: string) => {
   display: flex;
   flex-direction: column;
 
-  width: 20%;
-  padding: 125px 105px;
+  width: cals(20% - 120);
+  padding: 125px 55px;
 
   background-color: #f8f8fb;
 

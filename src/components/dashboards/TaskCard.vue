@@ -1,41 +1,75 @@
 <script lang="ts" setup>
 import { useModal, useModalSlot } from 'vue-final-modal'
-import { PropType } from 'vue'
+import { PropType, ref } from 'vue'
+
 import { ICard } from '../../types/types'
 import { formatDate } from '../../utils'
-import RemoveIcon from '../icons/RemoveIcon.vue'
 import ModalConfirm from '../modal/ModalConfirm.vue'
 import cardsApi from '../../api/cardsApi'
+import BaseForm from '../BaseForm.vue'
 
-const { card } = defineProps({
-  card: { type: Object as PropType<ICard>, required: true }
+const { card, cards, updateDashboard } = defineProps({
+  card: { type: Object as PropType<ICard>, required: true },
+  cards: { type: Array as PropType<ICard[]>, required: true },
+  updateDashboard: { type: Function, required: true }
 })
 
-const { open, close } = useModal({
+const formInputs = [
+  { label: 'Title of card', ref: ref(card.title) },
+  { label: 'Content of card', ref: ref(card.content) }
+]
+
+const deleteCard = async (e: Event) => {
+  e.preventDefault()
+  try {
+    await cardsApi.deleteCard(card.id)
+    await updateDashboard()
+    close()
+    return false
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+var { open, close } = useModal({
   component: ModalConfirm,
   attrs: {
-    title: 'Delete card from ' + card.status + ' column.',
+    title: 'Edit card from ' + card.status + ' column with title = ' + `${card.title}`,
     async onConfirm() {
       try {
-        await cardsApi.deleteCard(card.id)
+        const updateCardDto = {
+          id: card.id,
+          title: formInputs[0].ref.value,
+          content: formInputs[1].ref.value
+        }
+        await cardsApi.updateCard(updateCardDto)
         close()
+        await updateDashboard()
       } catch (error) {
         console.log(error)
       }
     }
   },
   slots: {
-    default: `Are you sure you want to delete card with title = ${card.title} ?`
+    default: useModalSlot({
+      component: BaseForm,
+      attrs: {
+        form: formInputs,
+        button: {
+          text: 'Delete card',
+          onClick: deleteCard
+        }
+      }
+    })
   }
 })
 </script>
 
 <template>
-  <section class="card">
+  <section class="card" @click="open">
     <div class="card__header">
       <h5 class="w-6">{{ card.title }}</h5>
       <div :class="['card__priority', card.priority]">{{ card.priority }}</div>
-      <RemoveIcon @click="open" />
     </div>
     <div class="card__info">
       <span class="stat">Content: </span>
@@ -71,6 +105,8 @@ const { open, close } = useModal({
 
   &__priority {
     padding: 1px 5px;
+    height: fit-content;
+
     border-radius: 10px;
     color: white;
     text-transform: capitalize;

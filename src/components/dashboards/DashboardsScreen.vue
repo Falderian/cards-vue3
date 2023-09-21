@@ -47,11 +47,13 @@ const { open, close } = useModal({
   <button @click="() => open()" class="btn-create">Create dashboard</button>
   <div>Dashboards:</div>
   <div class="dashboards">
-    <DashboardCard
-      v-for="dashboard in dashboards.dashboards"
-      :dashboard="dashboard"
-      :key="dashboard.id"
-    />
+    <TransitionGroup name="fade">
+      <DashboardCard
+        v-for="dashboard in dashboards.dashboards"
+        :dashboard="dashboard"
+        :key="dashboard.id"
+      />
+    </TransitionGroup>
   </div>
 </template>
 

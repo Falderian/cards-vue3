@@ -50,7 +50,8 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const { name } = to
   const isLogined = await isUserLogined()
-  if (name !== 'SignIn' && !isLogined) next({ name: 'SignIn' })
+  const userInfo = name !== 'SignIn' && name !== 'SignUp'
+  if (userInfo && !isLogined) next({ name: 'SignIn' })
   else next()
 })
 

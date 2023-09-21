@@ -14,9 +14,10 @@ interface ILoginUser {
   access_token: string
 }
 
-interface IDashboard {
+type IDashboard = {
   id: number
   title: string
+  description: string
   created_at: string
   updated_at: string
   tasksCount: number
@@ -52,10 +53,20 @@ type createCardDto = {
   dashboardId: number
 }
 
+type updateCardDto = {
+  title: string
+  content: string
+  id: number
+}
+
 type ILoginedUser = {
   username: string
   id: number
   isLogined: boolean
+}
+
+interface ITaskStatuses {
+  [key: string]: string | undefined
 }
 
 export type {
@@ -66,5 +77,7 @@ export type {
   IDashboard,
   ICard,
   createDashboardDro,
-  createCardDto
+  createCardDto,
+  updateCardDto,
+  ITaskStatuses
 }

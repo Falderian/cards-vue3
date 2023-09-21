@@ -6,7 +6,7 @@ import { ModalsContainer } from 'vue-final-modal'
 
 import SideBar from './components/SideBar.vue'
 import MainScreen from './components/MainScreen.vue'
-import Header from './components/Header.vue'
+import Header from './components/BaseHeader.vue'
 import { userStore } from './stores/user'
 
 const router = useRouter()
@@ -27,12 +27,10 @@ const switchItem = (item: string) => {
     clearUser()
 
     router.push({ name: 'SignIn' })
-    return
+  } else {
+    router.push({ name: item })
+    activeItem.value = item
   }
-
-  activeItem.value = item
-
-  router.push({ name: activeItem.value })
 }
 </script>
 

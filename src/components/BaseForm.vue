@@ -10,7 +10,8 @@ const { form, options, selectName, selectItem } = defineProps({
   form: { type: Array as PropType<formType[]>, required: true },
   options: { type: Array as PropType<string[]> },
   selectName: { type: String },
-  selectItem: { type: Function }
+  selectItem: { type: Function },
+  button: { type: Object }
 })
 
 const handleSelect = (e: Event) => {
@@ -32,14 +33,27 @@ const handleSelect = (e: Event) => {
       </select>
     </div>
   </form>
+
+  <button v-if="button" @click="button.onClick" class="btn-submit btn-rmv">
+    {{ button.text }}
+  </button>
 </template>
 
 <style lang="scss" scoped>
+.btn-rmv {
+  background-color: red;
+}
 .form {
   display: flex;
   gap: 15px;
   padding: 0;
+  width: 100%;
+
   border: none;
+
+  &__input {
+    width: 100%;
+  }
 
   &__item {
     width: 40%;

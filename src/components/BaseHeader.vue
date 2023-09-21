@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { userStore } from '../stores/user'
-import UserAvatar from './icons/UserAvatar.vue'
 
 const { user } = userStore()
 </script>

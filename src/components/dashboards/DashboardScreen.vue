@@ -1,18 +1,20 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
-import { onMounted, reactive, ref } from 'vue'
-import dashboardsApi from '@/api/dashboardsApi'
+import { onMounted, ref } from 'vue'
+import { useModal, useModalSlot } from 'vue-final-modal'
+
+import dashboardsApi from '../../api/dashboardsApi'
 import { formatDate, taskStatuses } from '../../utils'
-import { IDashboard } from '@/types/types'
+import { IDashboard } from '../../types/types'
 import TasksColumn from './TasksColumn.vue'
 import EditIcon from '../icons/EditIcon.vue'
-import { useModal, useModalSlot } from 'vue-final-modal'
 import ModalConfirm from '../modal/ModalConfirm.vue'
 import BaseForm from '../BaseForm.vue'
+import LoadingIcon from '../icons/LoadingIcon.vue'
 
 const route = useRoute()
 const isLoading = ref(true)
-let dashboard: IDashboard = reactive<IDashboard>({})
+let dashboard: IDashboard = <IDashboard>{}
 
 const formInputs = [{ label: 'Enter description of dashboard', ref: ref('') }]
 
@@ -21,8 +23,9 @@ onMounted(() => {
 })
 
 const updateDashboard = async () => {
+  setLoading(true)
   dashboard = await dashboardsApi.getDashboard(+route.params.id)
-  isLoading.value = false
+  setLoading(false)
 }
 
 const setLoading = (state: boolean) => {
@@ -64,45 +67,51 @@ const { open, close } = useModal({
 </script>
 
 <template>
-  <section v-if="!isLoading">
-    <h2 class="f-20">{{ dashboard.title }}</h2>
-    <div class="header">
-      <div class="stats base-border">
-        <span>Date added:</span>
-        <span>{{ formatDate(dashboard.created_at) }}</span>
-        <span>Date updated:</span>
-        <span class="stats__item">{{ formatDate(dashboard.created_at) }}</span>
-      </div>
-      <div class="description base-border">
-        <span>{{ dashboard.description }}</span>
-        <span @click="() => open()"><EditIcon /></span>
-      </div>
-      <div class="tasks base-border">
-        <div class="status">
-          <span>All tasks:</span>
-          <span>{{ dashboard.tasksCount }}</span>
+  <section v-if="!isLoading" class="dashboard">
+    <TransitionGroup name="fade">
+      <h2 class="f-20">{{ dashboard.title }}</h2>
+      <div class="header">
+        <div class="stats base-border">
+          <span>Date added:</span>
+          <span>{{ formatDate(dashboard.created_at) }}</span>
+          <span>Date updated:</span>
+          <span class="stats__item">{{ formatDate(dashboard.created_at) }}</span>
         </div>
-        <div v-for="(cards, status) in dashboard.cards" :key="status" class="status">
-          <span>{{ taskStatuses[status] }}</span>
-          <span>{{ cards.length }}</span>
+        <div class="description base-border">
+          <span>{{ dashboard.description }}</span>
+          <span @click="() => open()"><EditIcon /></span>
+        </div>
+        <div class="tasks base-border">
+          <div class="status">
+            <span>All tasks:</span>
+            <span>{{ dashboard.tasksCount }}</span>
+          </div>
+          <div v-for="(cards, status) in dashboard.cards" :key="status" class="status">
+            <span>{{ taskStatuses[status] }}</span>
+            <span>{{ cards.length }}</span>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="table">
-      <TasksColumn
-        v-for="(cards, status) in dashboard.cards"
-        :dashboardId="dashboard.id"
-        :cards="cards"
-        :status="status.toString()"
-        :key="status"
-        :set-loading="setLoading"
-        :update-dashboard="updateDashboard"
-      />
-    </div>
+      <div class="table">
+        <TasksColumn
+          v-for="(cards, status) in dashboard.cards"
+          :dashboardId="dashboard.id"
+          :cards="cards"
+          :status="status.toString()"
+          :key="status"
+          :set-loading="setLoading"
+          :update-dashboard="updateDashboard"
+        />
+      </div>
+    </TransitionGroup>
   </section>
+  <LoadingIcon v-else />
 </template>
 
 <style lang="scss" scoped>
+.dashboard {
+  width: calc(100% - 40px);
+}
 .header {
   display: grid;
   grid-template-columns: 0.5fr 1fr 0.5fr;
