@@ -6,18 +6,24 @@ type formType = {
   ref: Ref<string>
 }
 
-const { form, options, selectName, selectItem } = defineProps({
+const { form, options, selectName, selectItem, selectedItem } = defineProps({
   form: { type: Array as PropType<formType[]>, required: true },
   options: { type: Array as PropType<string[]> },
   selectName: { type: String },
   selectItem: { type: Function },
-  button: { type: Object }
+  button: { type: Object },
+  selectedItem: { type: String }
 })
 
 const handleSelect = (e: Event) => {
   selectItem?.((e!.target! as InputHTMLAttributes).value)
 }
+
+const isOptionDefault = (option: string) => {
+  return option === selectedItem
+}
 </script>
+
 <template>
   <form class="form">
     <div v-for="input in form" :key="input.label" class="form__input">
@@ -27,7 +33,7 @@ const handleSelect = (e: Event) => {
     <div v-if="selectItem">
       <span>{{ selectName }}</span>
       <select class="base-border" @change="handleSelect">
-        <option v-for="option in options" :key="option">
+        <option v-for="option in options" :key="option" :selected="isOptionDefault(option)">
           {{ option }}
         </option>
       </select>

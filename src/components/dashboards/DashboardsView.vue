@@ -3,17 +3,12 @@ import { onMounted } from 'vue'
 
 import { userStore } from '../../stores/user'
 import { dashboardsStore } from '../../stores/dashboards'
-import { errorNotification } from '../../utils'
 
 const { user } = userStore()
 const dashboards = dashboardsStore()
 
 onMounted(async () => {
-  try {
-    dashboards.getDashboards(user.id)
-  } catch (error) {
-    errorNotification(error as Error)
-  }
+  dashboards.getDashboards(user.id)
 })
 </script>
 

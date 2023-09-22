@@ -3,11 +3,10 @@ import { useModal, useModalSlot } from 'vue-final-modal'
 import { PropType, ref } from 'vue'
 
 import { ICard } from '../../types/types'
-import { errorNotification, formatDate } from '../../utils'
+import { errorNotification, formatDate, useSelectPriority } from '../../utils'
 import ModalConfirm from '../modal/ModalConfirm.vue'
 import cardsApi from '../../api/cardsApi'
 import BaseForm from '../BaseForm.vue'
-import { isAxiosError } from 'axios'
 
 const { card, updateDashboard } = defineProps({
   card: { type: Object as PropType<ICard>, required: true },
@@ -18,6 +17,8 @@ const formInputs = [
   { label: 'Title of card', ref: ref(card.title) },
   { label: 'Content of card', ref: ref(card.content) }
 ]
+
+const { selectedOption, selectItem, selectName, options } = useSelectPriority(card.status)
 
 const deleteCard = async (e: Event) => {
   e.preventDefault()
@@ -40,7 +41,9 @@ var { open, close } = useModal({
         const updateCardDto = {
           id: card.id,
           title: formInputs[0].ref.value,
-          content: formInputs[1].ref.value
+          content: formInputs[1].ref.value,
+          status: card.status,
+          priority: selectedOption.value
         }
         await cardsApi.updateCard(updateCardDto)
         close()
@@ -58,7 +61,11 @@ var { open, close } = useModal({
         button: {
           text: 'Delete card',
           onClick: deleteCard
-        }
+        },
+        options,
+        selectName,
+        selectItem,
+        selectedItem: card.priority.toLowerCase()
       }
     })
   }

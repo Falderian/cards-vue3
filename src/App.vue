@@ -1,51 +1,21 @@
 <script setup lang="ts">
-import { useCookies } from 'vue3-cookies'
-import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
 import { ModalsContainer } from 'vue-final-modal'
 
 import SideBar from './components/SideBar.vue'
 import MainScreen from './components/MainScreen.vue'
 import Header from './components/BaseHeader.vue'
-import { userStore } from './stores/user'
-import { notification } from './utils'
-
-const router = useRouter()
-const { cookies } = useCookies()
-const { user, clearUser } = userStore()
-
-const menuItems = computed<string[]>(() => {
-  return user.isLogined ? ['Dashboards', 'SignOut'] : ['SignIn', 'SignUp']
-})
-
-const activeItem = ref(menuItems.value[0])
-
-const switchItem = (item: string) => {
-  if (item === 'SignOut') {
-    cookies.remove('token')
-    cookies.remove('userId')
-
-    clearUser()
-
-    router.push({ name: 'SignIn' })
-    notification({ type: 'warn', text: 'Your have been sign out', title: 'Signed out' })
-  } else {
-    router.push({ name: item })
-    activeItem.value = item
-  }
-}
 </script>
 
 <template>
   <div class="wrapper base-font">
     <ModalsContainer />
-    <SideBar :menu-items="menuItems" :active-item="activeItem" :switch-item="switchItem" />
+    <SideBar />
     <div class="wrapper__column">
       <Header />
       <MainScreen />
     </div>
   </div>
-  <notifications />
+  <notifications :pauseOnHover="true" classes="notification vue-notification" />
 </template>
 
 <style scoped lang="scss">
@@ -63,6 +33,9 @@ const switchItem = (item: string) => {
 
     width: 100%;
   }
+}
+.vue-notification-group {
+  top: 1rem !important;
 }
 
 .base-font {

@@ -1,9 +1,10 @@
 import { notify } from '@kyvg/vue3-notification'
-import { isAxiosError } from 'axios'
+import { AxiosError, isAxiosError } from 'axios'
 import type { TNotification } from './types/types'
+import { ref } from 'vue'
 
 const constants = {
-  baseUrl: 'http://localhost:2000/api/'
+  baseUrl: 'http://localhost:5000/api/'
 }
 
 const formatDate = (date: string) => {
@@ -19,15 +20,33 @@ const taskStatuses = {
 
 const errorNotification = (error: Error) => {
   isAxiosError(error) &&
-    notify({
+    console.log({
       title: error.response?.statusText,
       text: error.response!.data.message.join(', '),
       type: 'error'
     })
+  // isAxiosError(error) &&
+  //   notify({
+  //     title: error.response?.statusText,
+  //     text: error.response!.data.message.join(', '),
+  //     type: 'error'
+  //   })
 }
 
 const notification = (notification: TNotification) => {
   notify({ ...notification })
 }
 
-export { formatDate, taskStatuses, constants, errorNotification, notification }
+const useSelectPriority = (priority: string = 'low') => {
+  const options = ['low', 'medium', 'high']
+  const selectedOption = ref(priority)
+  const selectName = 'Select a priority for the card'
+
+  const selectItem = (item: string) => {
+    selectedOption.value = item
+  }
+
+  return { selectItem, options, selectName, selectedOption }
+}
+
+export { formatDate, taskStatuses, constants, errorNotification, notification, useSelectPriority }

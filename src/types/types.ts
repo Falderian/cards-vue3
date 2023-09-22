@@ -22,10 +22,10 @@ type IDashboard = {
   updated_at: string
   tasksCount: number
   cards: {
-    toDo: string
-    inProgress: string
-    review: string
-    completed: string
+    toDo: ICard[]
+    inProgress: ICard[]
+    review: ICard[]
+    completed: ICard[]
   }
 }
 
@@ -54,9 +54,10 @@ type createCardDto = {
 }
 
 type updateCardDto = {
+  id: number
   title: string
   content: string
-  id: number
+  status: string
 }
 
 type ILoginedUser = {

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { reactive, computed } from 'vue'
 import { AxiosError } from 'axios'
+
 import { IError } from '../../types/types'
 import userApi from '../../api/userApi'
-import { errorNotification, notification } from '../../utils'
 
 type IForm = { username: string; password: string; passwordConfirm: string }
 
@@ -32,10 +32,8 @@ const submit = async () => {
   form.isLoading = true
   try {
     await userApi.signUp({ username: form.username, password: form.password })
-    notification({ type: 'success', text: 'You have been logined', title: 'Login success' })
   } catch (error) {
     let message = ((error as AxiosError).response?.data as IError).message
-    errorNotification(error as Error)
     if (Array.isArray(message)) {
       message = message.join(', ')
     }
@@ -54,7 +52,7 @@ const submit = async () => {
         <input v-model="form[item.value as keyof IForm]" placeholder="Type here..." />
       </div>
       <div class="form__footer">
-        <button type="submit" :class="['btn', errors && 'disabled']">Submit</button>
+        <button type="submit" :class="['btn-submit', errors && 'disabled']">Submit</button>
 
         <div v-if="form.isLoading" class="loading">Loading...</div>
         <Transition name="fade">
@@ -124,22 +122,6 @@ const submit = async () => {
           text-transform: capitalize;
         }
       }
-    }
-  }
-
-  .btn {
-    height: 40px;
-    width: 100px;
-
-    color: white;
-
-    border-radius: 15px;
-    background: #67cb65;
-    border: 1px solid transparent;
-    transition: 0.5s;
-
-    &:hover {
-      outline: 1px solid chocolate;
     }
   }
 

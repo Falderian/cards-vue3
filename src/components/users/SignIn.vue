@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { reactive, computed } from 'vue'
 import { AxiosError } from 'axios'
-import { useCookies } from 'vue3-cookies'
-import { IError, ILoginUser } from '../../types/types'
 import { useRouter } from 'vue-router'
+import { useCookies } from 'vue3-cookies'
+
+import { IError, ILoginUser } from '../../types/types'
 import { userStore } from '../../stores/user'
 import userApi from '../../api/userApi'
-import { errorNotification, notification } from '../../utils'
+import { notification, errorNotification } from '../../utils'
 
 type IForm = { username: string; password: string }
 
@@ -45,19 +46,20 @@ const submit = async () => {
     cookies.set('userId', login.userId.toString())
     cookies.set('token', login.access_token)
 
+    router.push({ name: 'Dashboards' })
+
     notification({ type: 'success', title: 'Signed in', text: 'You have been logined' })
   } catch (error) {
-    let message = ((error as AxiosError).response?.data as IError).message
-
-    errorNotification(error as Error)
+    let { message } = (error as AxiosError).response?.data as IError
 
     if (Array.isArray(message)) {
       message = message.join(', ')
     }
     form.error = message
+
+    notification({ type: 'error', title: 'Error', text: message })
   } finally {
     form.isLoading = false
-    router.push({ name: 'Dashboards' })
   }
 }
 </script>
@@ -94,10 +96,6 @@ const submit = async () => {
   .disabled {
     opacity: 0.5;
     pointer-events: none;
-  }
-
-  .btn-submit {
-    padding: 0 20px;
   }
 }
 </style>

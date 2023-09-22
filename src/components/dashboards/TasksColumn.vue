@@ -5,7 +5,7 @@ import { useModal, useModalSlot } from 'vue-final-modal'
 import AddIcon from '../icons/AddIcon.vue'
 import TaskCard from './TaskCard.vue'
 import { ICard, ITaskStatuses } from '../../types/types'
-import { errorNotification, taskStatuses } from '../../utils'
+import { taskStatuses, useSelectPriority } from '../../utils'
 import CardsApi from '../../api/cardsApi'
 import ModalConfirm from '../modal/ModalConfirm.vue'
 import BaseForm from '../BaseForm.vue'
@@ -20,16 +20,10 @@ const { cards, status, dashboardId, setLoading, updateDashboard } = defineProps(
 })
 
 const { user } = userStore()
+
+const { selectedOption, selectItem, selectName, options } = useSelectPriority()
+
 const currCards = ref(cards)
-
-const selectItem = (item: string) => {
-  selectedOption.value = item
-}
-
-const selectName = 'Select a priority for the card'
-const options = ['low', 'medium', 'high']
-
-const selectedOption = ref(options[0])
 
 const formInputs = [
   { label: 'Title of card', ref: ref('') },
@@ -41,24 +35,19 @@ const { open, close } = useModal({
   attrs: {
     title: 'Enter the description for the new task to the ' + status + ' column',
     async onConfirm() {
-      try {
-        setLoading(true)
-        const newCard = {
-          userId: user.id,
-          title: formInputs[0].ref.value,
-          content: formInputs[1].ref.value,
-          priority: selectedOption.value,
-          status,
-          dashboardId
-        }
-        await CardsApi.createCard(newCard)
-        close()
-        await updateDashboard()
-      } catch (error) {
-        errorNotification(error as Error)
-      } finally {
-        setLoading(false)
+      setLoading(true)
+      const newCard = {
+        userId: user.id,
+        title: formInputs[0].ref.value,
+        content: formInputs[1].ref.value,
+        priority: selectedOption.value,
+        status,
+        dashboardId
       }
+      await CardsApi.createCard(newCard)
+      close()
+      await updateDashboard()
+      setLoading(false)
     }
   },
   slots: {

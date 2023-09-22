@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { constants } from '../utils'
+import { constants, errorNotification, notification } from '../utils'
 import { useCookies } from 'vue3-cookies'
 import type { createCardDto, updateCardDto } from '../types/types'
 
@@ -21,18 +21,33 @@ class CardsApi {
   }
 
   async createCard(payload: createCardDto) {
-    const newCard = await axios.post(this.url, payload, this.config)
-    return newCard
+    try {
+      const newCard = await axios.post(this.url, payload, this.config)
+      notification({ type: 'success', title: 'Success', text: 'New card have been created' })
+      return newCard
+    } catch (error) {
+      errorNotification(error as Error)
+    }
   }
 
   async updateCard(payload: updateCardDto) {
-    const req = await axios.patch(this.url, payload, this.config)
-    return req
+    try {
+      const req = await axios.patch(this.url, payload, this.config)
+      notification({ type: 'success', title: 'Success', text: 'Card have been updated' })
+      return req
+    } catch (error) {
+      errorNotification(error as Error)
+    }
   }
 
   async deleteCard(id: number) {
-    const req = await axios.delete(this.url + id, this.config)
-    return req
+    try {
+      const req = await axios.delete(this.url + id, this.config)
+      notification({ type: 'success', title: 'Success', text: 'Card have been deleted' })
+      return req
+    } catch (error) {
+      errorNotification(error as Error)
+    }
   }
 }
 

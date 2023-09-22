@@ -25,29 +25,29 @@ const router = createRouter({
       path: '/dashboards',
       name: 'Dashboards',
       component: DashboardsView,
-      redirect: () => ({ name: 'list' }),
+      redirect: () => ({ name: 'DashboardsList' }),
       children: [
         {
           path: 'list',
-          name: 'list',
+          name: 'DashboardsList',
           component: DashboardsScreen
         },
         {
           path: ':id',
-          name: 'dashboard',
+          name: 'Dashboard',
           component: DashboardScreen
         }
       ]
     },
     {
       path: '/:pathMatch(.*)*',
-      name: 'notFound',
+      name: 'NotFound',
       component: NotFound
     }
   ]
 })
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (to, _, next) => {
   const { name } = to
   const isLogined = await isUserLogined()
   const userInfo = name !== 'SignIn' && name !== 'SignUp'
