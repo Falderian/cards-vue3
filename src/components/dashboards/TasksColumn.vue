@@ -45,7 +45,6 @@ const { open, close } = useModal({
           status,
           dashboardId
         }
-        console.log(newCard)
         await CardsApi.createCard(newCard)
         close()
         await updateDashboard()
