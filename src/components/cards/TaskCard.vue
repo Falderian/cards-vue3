@@ -40,7 +40,6 @@ const { open, close } = useModal({
     title: 'Edit card from ' + card.status + ' column with title = ' + `${card.title}`,
     async onConfirm() {
       try {
-        console.log(selectedOption.value)
         const updateCardDto = {
           id: card.id,
           title: formInputs[0].ref.value,
