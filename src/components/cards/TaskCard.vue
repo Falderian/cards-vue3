@@ -1,24 +1,26 @@
 <script lang="ts" setup>
 import { useModal, useModalSlot } from 'vue-final-modal'
-import { PropType, ref } from 'vue'
+import { type PropType, ref } from 'vue'
 
-import { ICard } from '../../types/types'
-import { errorNotification, formatDate, useSelectPriority } from '../../utils'
+import { type ICard } from '../../types/types'
+import { errorNotification, formatDate, useSelectStatus } from '../../utils'
 import ModalConfirm from '../modal/ModalConfirm.vue'
 import cardsApi from '../../api/cardsApi'
 import BaseForm from '../BaseForm.vue'
+import CardsPriorityBar from './CardsPriorityBar.vue'
+import EditIcon from '../icons/EditIcon.vue'
 
 const { card, updateDashboard } = defineProps({
   card: { type: Object as PropType<ICard>, required: true },
   updateDashboard: { type: Function, required: true }
 })
 
+const { selectedOption, selectItem, selectName, options } = useSelectStatus(card.status)
+
 const formInputs = [
   { label: 'Title of card', ref: ref(card.title) },
   { label: 'Content of card', ref: ref(card.content) }
 ]
-
-const { selectedOption, selectItem, selectName, options } = useSelectPriority(card.status)
 
 const deleteCard = async (e: Event) => {
   e.preventDefault()
@@ -32,18 +34,18 @@ const deleteCard = async (e: Event) => {
   }
 }
 
-var { open, close } = useModal({
+const { open, close } = useModal({
   component: ModalConfirm,
   attrs: {
     title: 'Edit card from ' + card.status + ' column with title = ' + `${card.title}`,
     async onConfirm() {
       try {
+        console.log(selectedOption.value)
         const updateCardDto = {
           id: card.id,
           title: formInputs[0].ref.value,
           content: formInputs[1].ref.value,
-          status: card.status,
-          priority: selectedOption.value
+          status: selectedOption.value
         }
         await cardsApi.updateCard(updateCardDto)
         close()
@@ -65,7 +67,7 @@ var { open, close } = useModal({
         options,
         selectName,
         selectItem,
-        selectedItem: card.priority.toLowerCase()
+        selectedItem: card.status
       }
     })
   }
@@ -73,10 +75,11 @@ var { open, close } = useModal({
 </script>
 
 <template>
-  <section class="card" @click="open">
+  <section class="card">
     <div class="card__header">
       <h5 class="w-6">{{ card.title }}</h5>
-      <div :class="['card__priority', card.priority]">{{ card.priority }}</div>
+      <CardsPriorityBar :card="card" />
+      <EditIcon @click="open" />
     </div>
     <div class="card__info">
       <span class="stat">Content: </span>
@@ -108,15 +111,6 @@ var { open, close } = useModal({
     grid-template-columns: 1fr 0fr 20px;
     grid-template-rows: 1fr;
     gap: 5px;
-  }
-
-  &__priority {
-    padding: 1px 5px;
-    height: fit-content;
-
-    border-radius: 10px;
-    color: white;
-    text-transform: capitalize;
   }
 
   &__info {

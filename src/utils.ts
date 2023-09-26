@@ -20,17 +20,11 @@ const taskStatuses = {
 
 const errorNotification = (error: Error) => {
   isAxiosError(error) &&
-    console.log({
+    notify({
       title: error.response?.statusText,
       text: error.response!.data.message.join(', '),
       type: 'error'
     })
-  // isAxiosError(error) &&
-  //   notify({
-  //     title: error.response?.statusText,
-  //     text: error.response!.data.message.join(', '),
-  //     type: 'error'
-  //   })
 }
 
 const notification = (notification: TNotification) => {
@@ -40,7 +34,7 @@ const notification = (notification: TNotification) => {
 const useSelectPriority = (priority: string = 'low') => {
   const options = ['low', 'medium', 'high']
   const selectedOption = ref(priority)
-  const selectName = 'Select a priority for the card'
+  const selectName = 'Select a priority '
 
   const selectItem = (item: string) => {
     selectedOption.value = item
@@ -49,4 +43,25 @@ const useSelectPriority = (priority: string = 'low') => {
   return { selectItem, options, selectName, selectedOption }
 }
 
-export { formatDate, taskStatuses, constants, errorNotification, notification, useSelectPriority }
+const useSelectStatus = (status: string) => {
+  const options = ['toDo', 'inProgress', 'review', 'completed']
+  const selectedOption = ref('')
+  const selectName = 'Select a status for the card'
+
+  const selectItem = (item: string) => {
+    selectedOption.value = item
+  }
+  selectItem(status)
+
+  return { selectItem, options, selectName, selectedOption }
+}
+
+export {
+  formatDate,
+  taskStatuses,
+  constants,
+  errorNotification,
+  notification,
+  useSelectPriority,
+  useSelectStatus
+}

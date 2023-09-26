@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { PropType } from 'vue'
+import { type PropType } from 'vue'
 import { useRouter } from 'vue-router'
 
-import { IDashboard } from '../../types/types'
+import { type IDashboard } from '../../types/types'
 import { formatDate } from '../../utils'
 
 const router = useRouter()

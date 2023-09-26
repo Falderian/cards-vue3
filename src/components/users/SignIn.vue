@@ -4,10 +4,10 @@ import { AxiosError } from 'axios'
 import { useRouter } from 'vue-router'
 import { useCookies } from 'vue3-cookies'
 
-import { IError, ILoginUser } from '../../types/types'
+import type { IError, ILoginUser } from '../../types/types'
 import { userStore } from '../../stores/user'
 import userApi from '../../api/userApi'
-import { notification, errorNotification } from '../../utils'
+import { notification } from '../../utils'
 
 type IForm = { username: string; password: string }
 

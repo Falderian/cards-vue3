@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import { PropType, ref } from 'vue'
+import { type PropType, ref } from 'vue'
 import { useModal, useModalSlot } from 'vue-final-modal'
 
 import AddIcon from '../icons/AddIcon.vue'
-import TaskCard from './TaskCard.vue'
-import { ICard, ITaskStatuses } from '../../types/types'
+import TaskCard from '../cards/TaskCard.vue'
+import type { ICard, ITaskStatuses } from '../../types/types'
 import { taskStatuses, useSelectPriority } from '../../utils'
 import CardsApi from '../../api/cardsApi'
 import ModalConfirm from '../modal/ModalConfirm.vue'
@@ -35,19 +35,25 @@ const { open, close } = useModal({
   attrs: {
     title: 'Enter the description for the new task to the ' + status + ' column',
     async onConfirm() {
-      setLoading(true)
-      const newCard = {
-        userId: user.id,
-        title: formInputs[0].ref.value,
-        content: formInputs[1].ref.value,
-        priority: selectedOption.value,
-        status,
-        dashboardId
+      try {
+        setLoading(true)
+        const newCard = {
+          userId: user.id,
+          title: formInputs[0].ref.value,
+          content: formInputs[1].ref.value,
+          priority: selectedOption.value,
+          status,
+          dashboardId
+        }
+        console.log(newCard)
+        await CardsApi.createCard(newCard)
+        close()
+        await updateDashboard()
+      } catch (error) {
+        console.log(error)
+      } finally {
+        setLoading(false)
       }
-      await CardsApi.createCard(newCard)
-      close()
-      await updateDashboard()
-      setLoading(false)
     }
   },
   slots: {

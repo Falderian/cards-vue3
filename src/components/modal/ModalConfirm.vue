@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { VueFinalModal } from 'vue-final-modal'
-import { Ref } from 'vue'
+import { type Ref } from 'vue'
 
 defineProps<{
   title?: string

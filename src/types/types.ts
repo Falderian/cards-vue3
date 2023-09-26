@@ -41,8 +41,9 @@ interface ICard {
 
 type createDashboardDro = {
   title: string
-  userId: number
+  userId?: number
   description?: string
+  id?: number
 }
 
 type createCardDto = {

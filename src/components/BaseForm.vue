@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type PropType, Ref, InputHTMLAttributes } from 'vue'
+import type { PropType, Ref, InputHTMLAttributes } from 'vue'
 
 type formType = {
   label: string
@@ -7,7 +7,7 @@ type formType = {
 }
 
 const { form, options, selectName, selectItem, selectedItem } = defineProps({
-  form: { type: Array as PropType<formType[]>, required: true },
+  form: { type: Array as PropType<formType[]> },
   options: { type: Array as PropType<string[]> },
   selectName: { type: String },
   selectItem: { type: Function },
@@ -32,8 +32,13 @@ const isOptionDefault = (option: string) => {
     </div>
     <div v-if="selectItem">
       <span>{{ selectName }}</span>
-      <select class="base-border" @change="handleSelect">
-        <option v-for="option in options" :key="option" :selected="isOptionDefault(option)">
+      <select class="base-border select" @change="handleSelect">
+        <option
+          class="select__option"
+          :key="option"
+          :selected="isOptionDefault(option)"
+          v-for="option in options"
+        >
           {{ option }}
         </option>
       </select>
@@ -64,6 +69,15 @@ const isOptionDefault = (option: string) => {
     width: 40%;
     display: flex;
     gap: 10px;
+  }
+
+  .select {
+    margin-left: 10px;
+    background-color: white;
+
+    &__option {
+      text-transform: capitalize;
+    }
   }
 }
 </style>

@@ -32,7 +32,9 @@ class DashboardsApi {
       return newDashboard
     } catch (error) {
       const err = (error as AxiosError).response!
+
       const { message } = err.data as IError
+      
       notification({
         title: err.statusText,
         text: message.toString(),

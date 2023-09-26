@@ -12,7 +12,7 @@ export const dashboardsStore = defineStore('dashboardsStore', () => {
 
   const createDashboard = async (dashboard: createDashboardDro) => {
     const newDashboard = await dashboardsApi.createDashboard(dashboard)
-    await getDashboards(dashboard.userId)
+    await getDashboards(dashboard.userId!)
     return newDashboard
   }
 

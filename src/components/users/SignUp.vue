@@ -2,7 +2,7 @@
 import { reactive, computed } from 'vue'
 import { AxiosError } from 'axios'
 
-import { IError } from '../../types/types'
+import { type IError } from '../../types/types'
 import userApi from '../../api/userApi'
 
 type IForm = { username: string; password: string; passwordConfirm: string }

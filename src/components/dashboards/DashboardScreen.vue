@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
-import { onMounted, ref } from 'vue'
+import { onMounted, provide, ref } from 'vue'
 import { useModal, useModalSlot } from 'vue-final-modal'
 
 import dashboardsApi from '../../api/dashboardsApi'
 import { formatDate, taskStatuses } from '../../utils'
-import { IDashboard } from '../../types/types'
+import type { createDashboardDro, IDashboard } from '../../types/types'
 import TasksColumn from './TasksColumn.vue'
 import EditIcon from '../icons/EditIcon.vue'
 import ModalConfirm from '../modal/ModalConfirm.vue'
@@ -29,6 +29,8 @@ const updateDashboard = async () => {
   setLoading(false)
 }
 
+provide('updateDashboard', updateDashboard)
+
 const setLoading = (state: boolean) => {
   isLoading.value = state
 }
@@ -41,16 +43,16 @@ const { open, close } = useModal({
       isLoading.value = true
       const { title } = dashboard!
 
-      const dashboardToUpdate = {
-        description: formInputs[0].ref.value,
+      const dashboardToUpdate: createDashboardDro = {
         id: dashboard!.id,
+        description: formInputs[0].ref.value,
         title
       }
 
       await dashboardsApi.updateDashboard(dashboardToUpdate)
 
       dashboard!.title = dashboardToUpdate.title
-      dashboard!.description = dashboardToUpdate.description
+      dashboard!.description = dashboardToUpdate.description!
       close()
       isLoading.value = false
     }
