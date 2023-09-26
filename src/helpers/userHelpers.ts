@@ -12,7 +12,8 @@ const isUserLogined = async (): Promise<boolean> => {
   if (!token) return false
 
   const findUser = (await UserApi.validateToken({ token })).data
-  setUser(findUser)
+
+  setUser({ ...findUser, isLogined: true })
 
   return true
 }

@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { PropType } from 'vue'
-import { IDashboard } from '../../types/types'
-import { formatDate } from '../../utils'
+import { type PropType } from 'vue'
 import { useRouter } from 'vue-router'
+
+import { type IDashboard } from '../../types/types'
+import { formatDate } from '../../utils'
 
 const router = useRouter()
 
@@ -11,7 +12,7 @@ const { dashboard } = defineProps({
 })
 
 const handleClick = (id: number) => {
-  router.push({ name: 'dashboard', params: { id } })
+  router.push({ name: 'Dashboard', params: { id } })
 }
 </script>
 

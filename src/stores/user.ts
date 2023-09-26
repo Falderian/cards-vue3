@@ -1,21 +1,25 @@
 import { reactive } from 'vue'
 import { defineStore } from 'pinia'
-import { ILoginedUser } from '../types/types'
+import type { ILoginedUser } from '../types/types'
 
-export const userStore = defineStore('user', () => {
-  const user = reactive<ILoginedUser>({
-    id: 0,
-    username: '',
-    isLogined: false
-  })
+const emtpyUser = <ILoginedUser>{
+  id: 0,
+  username: '',
+  isLogined: false
+}
+
+export const userStore = defineStore('userStore', () => {
+  const user = reactive({ ...emtpyUser })
 
   const setUser = (newUser: ILoginedUser) => {
     user.username = newUser.username
     user.id = newUser.id
-    user.isLogined = true
+    user.isLogined = newUser.isLogined
   }
 
-  const clearUser = () => {}
+  const $reset = () => {
+    setUser({ ...emtpyUser })
+  }
 
-  return { user, setUser, clearUser }
+  return { user, setUser, $reset }
 })

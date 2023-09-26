@@ -1,18 +1,21 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
-import { onMounted, reactive, ref } from 'vue'
-import dashboardsApi from '@/api/dashboardsApi'
+import { onMounted, provide, ref } from 'vue'
+import { useModal, useModalSlot } from 'vue-final-modal'
+
+import dashboardsApi from '../../api/dashboardsApi'
 import { formatDate, taskStatuses } from '../../utils'
-import { IDashboard } from '@/types/types'
+import type { createDashboardDro, IDashboard } from '../../types/types'
 import TasksColumn from './TasksColumn.vue'
 import EditIcon from '../icons/EditIcon.vue'
-import { useModal, useModalSlot } from 'vue-final-modal'
 import ModalConfirm from '../modal/ModalConfirm.vue'
 import BaseForm from '../BaseForm.vue'
+import LoadingIcon from '../icons/LoadingIcon.vue'
 
 const route = useRoute()
+
 const isLoading = ref(true)
-let dashboard: IDashboard = reactive<IDashboard>({})
+let dashboard: IDashboard | undefined = undefined
 
 const formInputs = [{ label: 'Enter description of dashboard', ref: ref('') }]
 
@@ -21,9 +24,12 @@ onMounted(() => {
 })
 
 const updateDashboard = async () => {
+  setLoading(true)
   dashboard = await dashboardsApi.getDashboard(+route.params.id)
-  isLoading.value = false
+  setLoading(false)
 }
+
+provide('updateDashboard', updateDashboard)
 
 const setLoading = (state: boolean) => {
   isLoading.value = state
@@ -34,22 +40,21 @@ const { open, close } = useModal({
   attrs: {
     title: 'Update dashboards description',
     async onConfirm() {
-      try {
-        isLoading.value = true
-        const dashboardToUpdate = {
-          description: formInputs[0].ref.value,
-          id: dashboard.id,
-          title: dashboard.title
-        }
-        await dashboardsApi.updateDashboard(dashboardToUpdate)
-        dashboard.title = dashboardToUpdate.title
-        dashboard.description = dashboardToUpdate.description
-        close()
-      } catch (error) {
-        console.log(error)
-      } finally {
-        isLoading.value = false
+      isLoading.value = true
+      const { title } = dashboard!
+
+      const dashboardToUpdate: createDashboardDro = {
+        id: dashboard!.id,
+        description: formInputs[0].ref.value,
+        title
       }
+
+      await dashboardsApi.updateDashboard(dashboardToUpdate)
+
+      dashboard!.title = dashboardToUpdate.title
+      dashboard!.description = dashboardToUpdate.description!
+      close()
+      isLoading.value = false
     }
   },
   slots: {
@@ -64,7 +69,7 @@ const { open, close } = useModal({
 </script>
 
 <template>
-  <section v-if="!isLoading">
+  <section v-if="!isLoading && dashboard" class="dashboard">
     <h2 class="f-20">{{ dashboard.title }}</h2>
     <div class="header">
       <div class="stats base-border">
@@ -100,9 +105,13 @@ const { open, close } = useModal({
       />
     </div>
   </section>
+  <LoadingIcon v-else />
 </template>
 
 <style lang="scss" scoped>
+.dashboard {
+  width: calc(100% - 40px);
+}
 .header {
   display: grid;
   grid-template-columns: 0.5fr 1fr 0.5fr;

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { VueFinalModal } from 'vue-final-modal'
-import { Ref } from 'vue'
+import { type Ref } from 'vue'
 
 defineProps<{
   title?: string
@@ -37,12 +37,14 @@ const emit = defineEmits<{
   height: 100%;
 }
 .confirm-modal-content {
-  height: fit-content;
-  width: 50%;
   display: flex;
   justify-content: center;
   align-items: flex-start;
   flex-direction: column;
+
+  height: fit-content;
+  min-width: 40%;
+  width: fit-content;
   padding: 20px;
 
   border: 0.5px solid rgba(183, 156, 156, 0.444);

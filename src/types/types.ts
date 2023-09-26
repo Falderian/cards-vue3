@@ -14,17 +14,18 @@ interface ILoginUser {
   access_token: string
 }
 
-interface IDashboard {
+type IDashboard = {
   id: number
   title: string
+  description: string
   created_at: string
   updated_at: string
   tasksCount: number
   cards: {
-    toDo: string
-    inProgress: string
-    review: string
-    completed: string
+    toDo: ICard[]
+    inProgress: ICard[]
+    review: ICard[]
+    completed: ICard[]
   }
 }
 
@@ -40,8 +41,9 @@ interface ICard {
 
 type createDashboardDro = {
   title: string
-  userId: number
+  userId?: number
   description?: string
+  id?: number
 }
 
 type createCardDto = {
@@ -52,10 +54,27 @@ type createCardDto = {
   dashboardId: number
 }
 
+type updateCardDto = {
+  id: number
+  title: string
+  content: string
+  status: string
+}
+
 type ILoginedUser = {
   username: string
   id: number
   isLogined: boolean
+}
+
+interface ITaskStatuses {
+  [key: string]: string | undefined
+}
+
+type TNotification = {
+  type: string
+  text: string
+  title: string
 }
 
 export type {
@@ -66,5 +85,8 @@ export type {
   IDashboard,
   ICard,
   createDashboardDro,
-  createCardDto
+  createCardDto,
+  updateCardDto,
+  ITaskStatuses,
+  TNotification
 }

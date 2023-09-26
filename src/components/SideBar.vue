@@ -1,27 +1,49 @@
 <script setup lang="ts">
-import Logo from './icons/logo.vue'
-import { type PropType, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { computed, watch } from 'vue'
+import { useCookies } from 'vue3-cookies'
 
-const props = defineProps({
-  menuItems: { type: Array as PropType<string[]>, required: true },
-  activeItem: { type: String, required: true },
-  switchItem: { type: Function, required: true }
-})
+import Logo from './icons/BaseLogo.vue'
+import { optionsStore } from '../stores/options'
+import { userStore } from '../stores/user'
+import { notification } from '../utils'
+
+const { cookies } = useCookies()
+const storeUser = userStore()
+const storeOptions = optionsStore()
 
 const route = useRoute()
 const router = useRouter()
+
+const menuItems = computed<string[]>(() => {
+  return storeUser.user.isLogined ? ['Dashboards', 'SignOut'] : ['SignIn', 'SignUp']
+})
+
+const switchItem = (item: string) => {
+  if (item === 'SignOut') {
+    cookies.remove('token')
+    cookies.remove('userId')
+
+    storeUser.$reset()
+
+    router.push({ name: 'SignIn' })
+    notification({ type: 'warn', text: 'Your have been sign out', title: 'Signed out' })
+  } else {
+    router.push({ name: item })
+    storeOptions.activeMenuItem = item
+  }
+}
 
 watch(
   () => route.name,
   async () => {
     await router.isReady()
-    props.switchItem(route.name)
+    switchItem(route.name!.toString())
   }
 )
 
 const isActive = (item: string) => {
-  return props.activeItem === item
+  return storeOptions.activeMenuItem === item || item.toLowerCase().includes('dashboard')
 }
 </script>
 
@@ -46,8 +68,8 @@ const isActive = (item: string) => {
   display: flex;
   flex-direction: column;
 
-  width: 20%;
-  padding: 125px 105px;
+  width: cals(20% - 120);
+  padding: 125px 55px;
 
   background-color: #f8f8fb;
 

@@ -3,8 +3,6 @@ import { defineStore } from 'pinia'
 import type { IDashboard, createDashboardDro } from '@/types/types'
 import dashboardsApi from '@/api/dashboardsApi'
 
-
-
 export const dashboardsStore = defineStore('dashboardsStore', () => {
   const dashboards = ref<IDashboard[]>([])
 
@@ -14,7 +12,7 @@ export const dashboardsStore = defineStore('dashboardsStore', () => {
 
   const createDashboard = async (dashboard: createDashboardDro) => {
     const newDashboard = await dashboardsApi.createDashboard(dashboard)
-    getDashboards(dashboard.userId)
+    await getDashboards(dashboard.userId!)
     return newDashboard
   }
 

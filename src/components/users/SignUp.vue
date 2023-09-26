@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { reactive, computed } from 'vue'
 import { AxiosError } from 'axios'
-import { IError } from '../../types/types'
+
+import { type IError } from '../../types/types'
 import userApi from '../../api/userApi'
 
 type IForm = { username: string; password: string; passwordConfirm: string }
@@ -33,7 +34,6 @@ const submit = async () => {
     await userApi.signUp({ username: form.username, password: form.password })
   } catch (error) {
     let message = ((error as AxiosError).response?.data as IError).message
-
     if (Array.isArray(message)) {
       message = message.join(', ')
     }
@@ -52,7 +52,7 @@ const submit = async () => {
         <input v-model="form[item.value as keyof IForm]" placeholder="Type here..." />
       </div>
       <div class="form__footer">
-        <button type="submit" :class="['btn', errors && 'disabled']">Submit</button>
+        <button type="submit" :class="['btn-submit', errors && 'disabled']">Submit</button>
 
         <div v-if="form.isLoading" class="loading">Loading...</div>
         <Transition name="fade">
@@ -122,22 +122,6 @@ const submit = async () => {
           text-transform: capitalize;
         }
       }
-    }
-  }
-
-  .btn {
-    height: 40px;
-    width: 100px;
-
-    color: white;
-
-    border-radius: 15px;
-    background: #67cb65;
-    border: 1px solid transparent;
-    transition: 0.5s;
-
-    &:hover {
-      outline: 1px solid chocolate;
     }
   }
 

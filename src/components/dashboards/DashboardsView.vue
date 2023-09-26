@@ -8,11 +8,7 @@ const { user } = userStore()
 const dashboards = dashboardsStore()
 
 onMounted(async () => {
-  try {
-    dashboards.getDashboards(user.id)
-  } catch (error) {
-    console.log(error)
-  }
+  dashboards.getDashboards(user.id)
 })
 </script>
 
@@ -26,6 +22,11 @@ onMounted(async () => {
 .wrapper {
   display: flex;
   flex-direction: column;
+  margin: auto;
+
+  align-items: center;
   padding: 15px;
+  width: 100%;
+  height: 100%;
 }
 </style>
