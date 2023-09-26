@@ -1,10 +1,10 @@
 import { notify } from '@kyvg/vue3-notification'
-import { AxiosError, isAxiosError } from 'axios'
+import { isAxiosError } from 'axios'
 import type { TNotification } from './types/types'
 import { ref } from 'vue'
 
 const constants = {
-  baseUrl: 'http://localhost:5000/api/'
+  baseUrl: 'https://cards-nestjs.cyclic.cloud/api/'
 }
 
 const formatDate = (date: string) => {
